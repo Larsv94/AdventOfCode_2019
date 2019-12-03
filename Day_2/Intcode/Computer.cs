@@ -14,8 +14,24 @@ namespace Intcode
            this.MemoryBackup = input;
            Reset();
         }
-        public (int noun,int verb) Attempt(Range range,int expectedResult){
-            return (0,0);
+        public (int,int) Attempt(int start, int count,int expectedResult){
+            int noun = 0,verb = 0;
+            foreach (int x in Enumerable.Range(start,count))
+            {
+                foreach (int y in Enumerable.Range(start,count))
+                {
+                    Memory[1] = x;
+                    Memory[2] = y;
+                    var output = Process();
+                    Reset();
+                    if (output == expectedResult)
+                    {
+                        (noun,verb)=(x,y);
+                        break;
+                    }
+                }   
+            }
+            return (noun,verb);
         }
         public void Reset(){
             this.Memory = (int[])MemoryBackup.Clone();
